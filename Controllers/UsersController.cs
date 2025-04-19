@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
+using PocWebDevBackend.Service.Auth;
 
 namespace PocWebDevBackend.Controllers
 {
-    public class ConsumptionsController : Controller
+    public class UsersController : Controller
     {
         private readonly AppDBContext _context;
+        private readonly IEncriptService _encriptService;
 
-        public ConsumptionsController(AppDBContext context)
+        public UsersController(AppDBContext context, IEncriptService encript)
         {
             _context = context;
+            _encriptService = encript;
         }
 
         public async Task<IActionResult> Index()
         {
-            var appDBContext = _context.Consumptions.Include(c => c.Veichle);
-            return View(await appDBContext.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -27,36 +28,34 @@ namespace PocWebDevBackend.Controllers
                 return NotFound();
             }
 
-            var consumption = await _context.Consumptions
-                .Include(c => c.Veichle)
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (consumption == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(consumption);
+            return View(user);
         }
 
         public IActionResult Create()
         {
-            ViewData["VeichleId"] = new SelectList(_context.Veichles, "Id", "Brand");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Date,Value,Type,VeichleId")] Consumption consumption)
+        public async Task<IActionResult> Create([Bind("Id,Name,Document,Email,Password,Profile")] User user)
         {
-            ModelState.Remove("Veichle");
+            var encripted = _encriptService.HashPassword(user, user.Password);
+            user.Password = encripted;
             if (ModelState.IsValid)
             {
-                _context.Add(consumption);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VeichleId"] = new SelectList(_context.Veichles, "Id", "Brand", consumption.VeichleId);
-            return View(consumption);
+            return View(user);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -66,20 +65,19 @@ namespace PocWebDevBackend.Controllers
                 return NotFound();
             }
 
-            var consumption = await _context.Consumptions.FindAsync(id);
-            if (consumption == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            ViewData["VeichleId"] = new SelectList(_context.Veichles, "Id", "Brand", consumption.VeichleId);
-            return View(consumption);
+            return View(user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Date,Value,Type,VeichleId")] Consumption consumption)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Document,Email,Password,Profile")] User user)
         {
-            if (id != consumption.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -88,12 +86,12 @@ namespace PocWebDevBackend.Controllers
             {
                 try
                 {
-                    _context.Update(consumption);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ConsumptionExists(consumption.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -104,8 +102,7 @@ namespace PocWebDevBackend.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VeichleId"] = new SelectList(_context.Veichles, "Id", "Brand", consumption.VeichleId);
-            return View(consumption);
+            return View(user);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -115,34 +112,33 @@ namespace PocWebDevBackend.Controllers
                 return NotFound();
             }
 
-            var consumption = await _context.Consumptions
-                .Include(c => c.Veichle)
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (consumption == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(consumption);
+            return View(user);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var consumption = await _context.Consumptions.FindAsync(id);
-            if (consumption != null)
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
             {
-                _context.Consumptions.Remove(consumption);
+                _context.Users.Remove(user);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ConsumptionExists(int id)
+        private bool UserExists(int id)
         {
-            return _context.Consumptions.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

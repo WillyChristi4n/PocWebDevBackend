@@ -9,5 +9,7 @@ namespace PocWebDevBackend.Models
         public DbSet<Veichle> Veichles { get; set; }
 
         public DbSet<Consumption> Consumptions { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }
