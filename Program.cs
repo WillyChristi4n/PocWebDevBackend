@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
 using PocWebDevBackend.Service.Auth;
@@ -14,6 +15,18 @@ builder.Services.AddDbContext<AppDBContext>(opttions =>
 );
 builder.Services.AddScoped<IEncriptService, EncriptService>();
 
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+{
+    opt.AccessDeniedPath = "/Users/AccessDenied/";
+    opt.LoginPath = "/";
+});
+
 var app = builder.Build();
 
 
@@ -27,14 +40,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Users}/{action=Login}")
+    pattern: "{controller=Home}/{action=Index}")
     .WithStaticAssets();
 
 

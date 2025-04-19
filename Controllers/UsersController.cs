@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
@@ -176,8 +177,14 @@ namespace PocWebDevBackend.Controllers
                 ExpiresUtc = DateTime.UtcNow.ToLocalTime().AddHours(3),
                 IsPersistent = true,
             };
-            
-            return Redirect("Home/Index");
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                userPrincipal,
+                authProps
+            );
+
+            return RedirectToAction("Home/Index");
         } 
     }
 }

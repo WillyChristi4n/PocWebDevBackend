@@ -11,13 +11,21 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar_header bg-white border-bottom box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PoC Veículos</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Meus Veículos</a>
+            </div>
+            <div class="nav_user_greetings">
+                @if (User.Identity.IsAuthenticated) {
+                    <p class="nav_user_greetings_text">Olá, <span class="nav_user_name">@User.Identity.Name</span></p>
+                    <span class="divisor"></span>
+                    <a class="">Sair</a>
+
+                } else {
+                    <a asp-area="" asp-controller="Home" asp-action="Index class="nav_user_greetings_text">
+                        Login
+                    </a>
+                }
             </div>
         </nav>
     </header>
