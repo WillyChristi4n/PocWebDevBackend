@@ -7,14 +7,14 @@ namespace PocWebDevBackend.Service.Auth
     {
         private readonly PasswordHasher<User> _hasher = new();
 
-        string IEncriptService.HashPassword(User user, string password)
+        public string HashPassword(User user, string password)
         {
             return _hasher.HashPassword(user, password);
         }
 
-        bool IEncriptService.VerifyPassword(User user, string hashedPassword, string givePassword)
+        public bool VerifyPassword(User user, string hashedPassword, string givenPassword)
         {
-            var result = _hasher.VerifyHashedPassword(user, hashedPassword, givePassword);
+            var result = _hasher.VerifyHashedPassword(user, hashedPassword, givenPassword);
             return result == PasswordVerificationResult.Success;
         }
     }
