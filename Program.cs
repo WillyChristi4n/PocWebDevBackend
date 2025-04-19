@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
-using PocWebDevBackend.Service.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +11,6 @@ builder.Services.AddDbContext<AppDBContext>(opttions =>
         builder.Configuration.GetConnectionString("DefaultConnection")
      )
 );
-builder.Services.AddScoped<IEncriptService, EncriptService>();
 
 
 var app = builder.Build();

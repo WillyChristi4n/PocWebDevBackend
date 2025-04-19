@@ -1,10 +1,5 @@
 @import "./custom.css";
 
-
-:root {
-    --bg-test: #658fad;
-}
-
 html {
   font-size: 14px;
 }
