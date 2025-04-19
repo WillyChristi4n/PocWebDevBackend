@@ -1,16 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
+using PocWebDevBackend.Service.Auth;
 
 namespace PocWebDevBackend.Controllers
 {
     public class UsersController : Controller
     {
         private readonly AppDBContext _context;
+        private readonly IEncriptService _encriptService;
 
-        public UsersController(AppDBContext context)
+        public UsersController(AppDBContext context, IEncriptService encriptService)
         {
             _context = context;
+            _encriptService = encriptService;
         }
 
         public async Task<IActionResult> Index()
@@ -44,8 +47,11 @@ namespace PocWebDevBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,Role")] User user)
         {
+
             if (ModelState.IsValid)
             {
+                var cript = _encriptService.HashPassword(user, user.Password);
+                user.Password = cript;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,6 +87,8 @@ namespace PocWebDevBackend.Controllers
             {
                 try
                 {
+                    var cript = _encriptService.HashPassword(user, user.Password);
+                    user.Password = cript;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
