@@ -58,6 +58,7 @@ namespace PocWebDevBackend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Date,Value,Type,VeichleId")] Consumption consumption)
         {
+            ModelState.Remove("Veichle");
             if (ModelState.IsValid)
             {
                 _context.Add(consumption);
