@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
@@ -18,14 +14,12 @@ namespace PocWebDevBackend.Controllers
             _context = context;
         }
 
-        // GET: Consumptions
         public async Task<IActionResult> Index()
         {
             var appDBContext = _context.Consumptions.Include(c => c.Veichle);
             return View(await appDBContext.ToListAsync());
         }
 
-        // GET: Consumptions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,16 +38,12 @@ namespace PocWebDevBackend.Controllers
             return View(consumption);
         }
 
-        // GET: Consumptions/Create
         public IActionResult Create()
         {
             ViewData["VeichleId"] = new SelectList(_context.Veichles, "Id", "Brand");
             return View();
         }
 
-        // POST: Consumptions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Date,Value,Type,VeichleId")] Consumption consumption)
@@ -69,7 +59,6 @@ namespace PocWebDevBackend.Controllers
             return View(consumption);
         }
 
-        // GET: Consumptions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,9 +75,6 @@ namespace PocWebDevBackend.Controllers
             return View(consumption);
         }
 
-        // POST: Consumptions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Date,Value,Type,VeichleId")] Consumption consumption)
@@ -98,6 +84,7 @@ namespace PocWebDevBackend.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("Veichle");
             if (ModelState.IsValid)
             {
                 try
@@ -122,7 +109,6 @@ namespace PocWebDevBackend.Controllers
             return View(consumption);
         }
 
-        // GET: Consumptions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,7 +127,6 @@ namespace PocWebDevBackend.Controllers
             return View(consumption);
         }
 
-        // POST: Consumptions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

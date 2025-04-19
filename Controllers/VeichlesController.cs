@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
 
@@ -24,7 +19,6 @@ namespace PocWebDevBackend.Controllers
             return View(await _context.Veichles.ToListAsync());
         }
 
-        // GET: Veichles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,15 +36,11 @@ namespace PocWebDevBackend.Controllers
             return View(veichle);
         }
 
-        // GET: Veichles/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Veichles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Brand,Model,YearOfManufactor,YearOfModel,Plate")] Veichle veichle)
@@ -65,7 +55,6 @@ namespace PocWebDevBackend.Controllers
             return View(veichle);
         }
 
-        // GET: Veichles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,7 +106,6 @@ namespace PocWebDevBackend.Controllers
             return View(veichle);
         }
 
-        // GET: Veichles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,7 +123,6 @@ namespace PocWebDevBackend.Controllers
             return View(veichle);
         }
 
-        // POST: Veichles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
