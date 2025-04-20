@@ -5,6 +5,9 @@
 <div class="access-denied-container">
     <h1>Acesso Negado</h1>
     <p>Você não tem permissão para acessar esta página.</p>
-    <a asp-action="Login" asp-controller="Users" href="/">Voltar ao Login</a>
+    <div class="links_container">
+        <a asp-action="Login" asp-controller="Users" >Voltar ao Login</a>
+        <a asp-action="Index" asp-controller="Home" >Voltar ao Home</a>
+    </div>
 </div>
 
