@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
 
 namespace PocWebDevBackend.Controllers
 {
+    [Authorize]
     public class ConsumptionsController : Controller
     {
         private readonly AppDBContext _context;

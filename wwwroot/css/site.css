@@ -1,4 +1,8 @@
-@import "./custom.css";
+@import "./toast.css";
+@import "./login.css";
+@import "./navigation.css";
+@import "./cards.css";
+@import "./access_denied.css";
 
 html {
   font-size: 14px;
@@ -30,4 +34,32 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+main {
+    position: relative;
+    overflow: hidden;
+    padding: 0 1rem;
+}
+
+.home-header {
+    font-size: 3rem;
+    color: #363636;
+}
+
+.home-container {
+    width: 100%;
+    height: calc(100Vh - 230px);
+    padding: 5rem 0rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.home-list {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3rem;
+    padding: 0 1rem;
 }

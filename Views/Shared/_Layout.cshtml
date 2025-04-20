@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+@using PocWebDevBackend.Service.Toast
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,17 +14,24 @@
 <body>
     <header>
         <nav class="navbar_header bg-white border-bottom box-shadow">
-            <div class="container-fluid">
+            <div class="container-fluid navigation">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Meus Veículos</a>
+                @if (User.IsInRole("Admin")){
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Usuários</a>
+                        </li>
+                    </ul>
+                }
             </div>
             <div class="nav_user_greetings">
                 @if (User.Identity.IsAuthenticated) {
                     <p class="nav_user_greetings_text">Olá, <span class="nav_user_name">@User.Identity.Name</span></p>
                     <span class="divisor"></span>
-                    <a class="">Sair</a>
+                    <a class="" asp-controller="Users" asp-action="Logout">Sair</a>
 
                 } else {
-                    <a asp-area="" asp-controller="Home" asp-action="Index class="nav_user_greetings_text">
+                    <a asp-controller="Users" asp-action="Login" class="nav_user_greetings_text">
                         Login
                     </a>
                 }
@@ -31,6 +40,22 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @{
+                var toastData = TempData["Toast"] as string;
+                var toast = !string.IsNullOrEmpty(toastData)
+                ? JsonSerializer.Deserialize<ToastService>(toastData)
+                : null;
+                bool showToast = toast != null;
+                var message = toast?.Message;
+                var type = toast?.Type.ToString().ToLower();
+
+            }
+
+            <div data-show="@showToast" class="toast_class toast_type_@type">
+                <p class="toast_type_@type">@message</p>
+            </div>
+
+
             @RenderBody()
         </main>
     </div>
