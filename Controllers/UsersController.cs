@@ -11,7 +11,7 @@ using PocWebDevBackend.Service.Toast;
 
 namespace PocWebDevBackend.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class UsersController : Controller
     {
         private readonly AppDBContext _context;
@@ -209,6 +209,7 @@ namespace PocWebDevBackend.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();

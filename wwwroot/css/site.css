@@ -40,6 +40,7 @@ main {
     position: relative;
     overflow: hidden;
     padding: 0 1rem;
+    height: calc(100vh - 190px)
 }
 
 .home-header {

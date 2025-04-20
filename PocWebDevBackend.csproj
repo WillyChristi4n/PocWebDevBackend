@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\acces_denied.css" />
     <Content Remove="wwwroot\css\custom.css" />
     <Content Remove="wwwroot\js\newFile.js" />
   </ItemGroup>

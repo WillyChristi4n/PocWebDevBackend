@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
     font-family: Arial, sans-serif;
     background-color: #f8d7da;
     color: #721c24;
@@ -36,6 +35,6 @@
     transition: border-bottom 0.2s ease;
 }
 
-    .access-denied-container a:hover {
-        border-bottom: 1px solid #721c24;
-    }
+.access-denied-container a:hover {
+    border-bottom: 1px solid #721c24;
+}
