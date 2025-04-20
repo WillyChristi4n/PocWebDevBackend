@@ -32,3 +32,34 @@ ul > li > a {
     text-decoration: none;
     color: inherit;
 }
+
+.divisor {
+    height: 1.5rem;
+    width: 1px;
+    background-color: lightgray;
+}
+
+.navbar_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem;
+    margin-bottom: 1.4rem;
+}
+
+.nav_user_greetings {
+    margin: auto 0;
+    gap: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav_user_greetings_text {
+    font-size: 1.2rem;
+    font-weight: lighter;
+    margin: 0;
+}
+.nav_user_name {
+    font-weight: bolder;
+}

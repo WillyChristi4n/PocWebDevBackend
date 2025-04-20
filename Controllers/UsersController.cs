@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
 using PocWebDevBackend.Service.Auth;
@@ -143,5 +146,45 @@ namespace PocWebDevBackend.Controllers
         {
             return _context.User.Any(e => e.Id == id);
         }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            // Valide user exist
+            var user = await _context.User.FirstOrDefaultAsync(user => user.Email == email);
+            if (user == null) return ViewBag.Message = "Usuário e/ou senha inválido(s)";
+
+            // Validate Password
+            var isValidPassword = _encriptService.VerifyPassword(user, user.Password, password);
+            if (!isValidPassword) return ViewBag.Message = "Usuário e/ou senha inválido(s)";
+
+            var userClaimList = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, $"{user.Role}"),
+            };
+            var userIdentity = new ClaimsIdentity(userClaimList, "login");
+            ClaimsPrincipal userPrincipal = new ClaimsPrincipal(userIdentity);
+            var authProps = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                ExpiresUtc = DateTime.UtcNow.ToLocalTime().AddHours(3),
+                IsPersistent = true,
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                userPrincipal,
+                authProps
+            );
+
+            return RedirectToAction("Home/Index");
+        } 
     }
 }
