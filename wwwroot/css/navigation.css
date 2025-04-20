@@ -2,7 +2,7 @@
     display: flex;
     gap: 1.5rem;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .navigation > a.navbar-brand {
