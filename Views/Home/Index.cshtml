@@ -3,16 +3,26 @@
 }
 
 <div class="text-center">
-    <h1 class="home-header">Meus carros</h1>
+    <h1 class="home-header">O que deseja ver?</h1>
 </div>
 
 <div class="home-container">
-    <ul class="home-list">
-        <li>
-            <a asp-controller="Veichles">Listar Veículos</a>
-        </li>
-        <li>
-            <a asp-controller="Veichles" asp-action="Create">Cadastrar Veículo</a>
-        </li>
-    </ul>
+    <div class="card">
+        <div class="card-body">
+            <h3>Veículos</h3>
+        </div>
+        <div class="card-footer">
+            <a asp-controller="Veichles" asp-action="Index">Ver mais</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3>Consumos</h3>
+        </div>
+        <div class="card-footer">
+            <a asp-controller="Consumptions" asp-action="Index">Ver mais</a>
+        </div>
+    </div>
+
 </div>

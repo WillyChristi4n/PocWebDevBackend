@@ -1,13 +1,17 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PocWebDevBackend.Models;
 using PocWebDevBackend.Service.Auth;
+using PocWebDevBackend.Service.Toast;
 
 namespace PocWebDevBackend.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly AppDBContext _context;
@@ -147,21 +151,39 @@ namespace PocWebDevBackend.Controllers
             return _context.User.Any(e => e.Id == id);
         }
 
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string email, string password)
         {
             // Valide user exist
             var user = await _context.User.FirstOrDefaultAsync(user => user.Email == email);
-            if (user == null) return ViewBag.Message = "Usuário e/ou senha inválido(s)";
+            if (user == null)
+            {
+                TempData["Toast"] = JsonSerializer.Serialize(new ToastService
+                {
+                    Message = "Usuário ou senha inválido",
+                    Type = ToastService.MessageType.Error
+                });
+                return View();
+            }
 
             // Validate Password
-            var isValidPassword = _encriptService.VerifyPassword(user, user.Password, password);
-            if (!isValidPassword) return ViewBag.Message = "Usuário e/ou senha inválido(s)";
+            bool isValidPassword = _encriptService.VerifyPassword(user, user.Password, password);
+            if (!isValidPassword)
+            {
+                TempData["Toast"] = JsonSerializer.Serialize(new ToastService
+                {
+                    Message = "Usuário ou senha inválido",
+                    Type = ToastService.MessageType.Error
+                });
+                return View();
+            }
 
             var userClaimList = new List<Claim>
             {
@@ -184,7 +206,20 @@ namespace PocWebDevBackend.Controllers
                 authProps
             );
 
-            return RedirectToAction("Home/Index");
-        } 
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Login", "Users");
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

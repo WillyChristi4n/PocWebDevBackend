@@ -24,7 +24,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
 {
     opt.AccessDeniedPath = "/Users/AccessDenied/";
-    opt.LoginPath = "/";
+    opt.LoginPath = "/Users/Login";
 });
 
 var app = builder.Build();
@@ -46,7 +46,7 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}")
+    pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
